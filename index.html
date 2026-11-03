@@ -1,396 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNELL-LABS // SYSTEM OVERRIDE</title>
-    <!-- Tailwind CSS for utility layout structure -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Retro Monospace & Tech Aesthetic -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
-
-    <style>
-        /* Custom Retro Cyber / CRT Styles & CSS Variables */
-        :root {
-            --bg-color: #050a08;
-            --main-color: #00ff66;
-            --main-dim: #00aa44;
-            --main-glow: rgba(0, 255, 102, 0.4);
-            --card-bg: rgba(4, 20, 12, 0.75);
-            --border-color: rgba(0, 255, 102, 0.3);
-            --scanline-color: rgba(0, 255, 102, 0.04);
-            --font-mono: 'Fira Code', monospace;
-            --font-crt: 'VT323', monospace;
-        }
-
-        /* Amber Theme Alternative */
-        body.theme-amber {
-            --bg-color: #0c0802;
-            --main-color: #ffb000;
-            --main-dim: #996a00;
-            --main-glow: rgba(255, 176, 0, 0.4);
-            --card-bg: rgba(24, 15, 3, 0.75);
-            --border-color: rgba(255, 176, 0, 0.3);
-            --scanline-color: rgba(255, 176, 0, 0.04);
-        }
-
-        /* Base Body & Layout */
-        body {
-            background-color: var(--bg-color);
-            color: var(--main-color);
-            font-family: var(--font-mono);
-            overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Subtle Retro Scanline Effect overlay */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                var(--scanline-color) 50%,
-                var(--scanline-color)
-            );
-            background-size: 100% 4px;
-            z-index: 50;
-        }
-
-        /* CRT Screen Flicker Effect */
-        .crt-flicker {
-            animation: flicker 0.15s infinite alternate;
-        }
-        @keyframes flicker {
-            0% { opacity: 0.98; }
-            100% { opacity: 1; }
-        }
-
-        /* Subtle Retro Grid Background */
-        .grid-bg {
-            background-image: 
-                linear-gradient(to right, rgba(0, 255, 102, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 255, 102, 0.05) 1px, transparent 1px);
-            background-size: 32px 32px;
-        }
-
-        /* Glowing Accent Text & Box Shadow */
-        .glow-text {
-            text-shadow: 0 0 8px var(--main-glow), 0 0 16px var(--main-glow);
-        }
-        
-        .retro-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            transition: all 0.25s ease-in-out;
-        }
-
-        .retro-card:hover {
-            border-color: var(--main-color);
-            box-shadow: 0 0 15px var(--main-glow), inset 0 0 15px var(--main-glow);
-            transform: translateY(-2px);
-        }
-
-        .retro-button {
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--main-color);
-            transition: all 0.2s ease;
-        }
-        .retro-button:hover {
-            background: var(--main-color);
-            color: var(--bg-color);
-            box-shadow: 0 0 10px var(--main-glow);
-        }
-
-        /* Blinking Cursor Animation */
-        .cursor-blink {
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Custom Scrollbar for Terminal */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--main-dim);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--main-color);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNELL LABS</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="crt-flicker grid-bg min-h-screen flex flex-col justify-between p-3 sm:p-6 md:p-10 select-none relative">
+<body>
 
-    <!-- Scanline Layer overlay -->
-    <div class="scanlines"></div>
+  <header>
+    <a href="/" class="logo">SNELL LABS</a>
+    <nav>
+      <a href="/" class="active">Projects</a>
+      <a href="/games/">Arcade</a>
+    </nav>
+  </header>
 
-    <div class="max-w-6xl mx-auto w-full flex-grow flex flex-col gap-6 relative z-10">
+  <main>
+    <section style="margin-bottom: 3rem;">
+      <h1 style="font-size: 2.5rem; font-weight: 600; letter-spacing: -1px; margin-bottom: 0.5rem;">
+        Experimental Engineering & Tech
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1.1rem;">
+        Personal portfolio, hardware builds, and interactive software experiments.
+      </p>
+    </section>
 
-        <!-- HEADER BAR -->
-        <header class="retro-card p-4 rounded-lg flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <!-- Status Beacon -->
-                <span class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--main-color);"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3" style="background-color: var(--main-color);"></span>
-                </span>
-                <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-wider glow-text uppercase font-mono">SNELL-LABS // SYSTEM STATUS</h1>
-                    <p class="text-xs tracking-widest opacity-80" style="color: var(--main-dim);">NODE ID: SL-7729 // SECURE CORE</p>
-                </div>
-            </div>
+    <section>
+      <h2 style="font-size: 1.1rem; font-family: var(--font-mono); color: var(--accent-color); margin-bottom: 1rem;">
+        // ACTIVE LABS
+      </h2>
+      <div style="padding: 1.5rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;">
+        <h3>Mini Arcade Experiment</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0.5rem 0 1rem 0;">
+          A simple interactive game built with HTML5 Canvas.
+        </p>
+        <a href="/games/" style="color: var(--text-main); font-weight: 500; text-decoration: underline;">Launch Arcade →</a>
+      </div>
+    </section>
+  </main>
 
-            <div class="flex items-center gap-4 text-xs">
-                <div class="text-right hidden sm:block">
-                    <div>CPU: <span id="cpu-load">12%</span></div>
-                    <div>MEM: <span id="mem-use">428MB / 1024MB</span></div>
-                </div>
-                <!-- Theme Switcher Button -->
-                <button onclick="toggleTheme()" class="retro-button px-3 py-1.5 rounded font-mono text-xs flex items-center gap-2">
-                    <span>MODE:</span>
-                    <span id="theme-label" class="font-bold">CRT-GREEN</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- MAIN HERO / UNDER DEVELOPMENT NOTICE -->
-        <section class="retro-card p-6 sm:p-10 rounded-lg text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[220px]">
-            <div class="absolute top-2 left-3 text-[10px] tracking-widest opacity-50">[SYS.MSG_014A]</div>
-            
-            <div class="inline-block border border-dashed p-1.5 px-3 rounded mb-4 text-xs tracking-widest uppercase" style="border-color: var(--border-color);">
-                STATUS: CONSTRUCTION IN PROGRESS
-            </div>
-
-            <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 font-mono glow-text">
-                PAGE UNDER DEVELOPMENT<span class="cursor-blink">_</span>
-            </h2>
-
-            <p class="max-w-2xl text-sm sm:text-base leading-relaxed opacity-90 font-mono">
-                Welcome to <span class="font-bold underline">snell-labs.com</span>. The digital workspace and testing ground for Jon Snell. Modern software, custom hardware projects, home lab experiments, and cyberdeck builds are actively being compiled for deployment.
-            </p>
-
-            <!-- Progress Bar Visual -->
-            <div class="w-full max-w-md mt-6">
-                <div class="flex justify-between text-xs mb-1">
-                    <span>INITIALIZING LAB ENVIRONMENT...</span>
-                    <span id="progress-percent">68%</span>
-                </div>
-                <div class="w-full h-3 rounded-full overflow-hidden p-0.5 border" style="border-color: var(--border-color);">
-                    <div id="progress-bar" class="h-full rounded-full transition-all duration-500" style="width: 68%; background-color: var(--main-color); box-shadow: 0 0 8px var(--main-glow);"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROJECT PREVIEW CATEGORIES GRID -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <!-- Category 1 -->
-            <div class="retro-card p-5 rounded-lg flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold px-2 py-0.5 rounded border" style="border-color: var(--border-color);">[MODULE 01]</span>
-                        <span class="text-xs opacity-75">v0.1</span>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 glow-text">Embedded & Hardware</h3>
-                    <p class="text-xs opacity-80 leading-relaxed mb-4">
-                        Microcontroller microcode, custom PCB layouts, sensor arrays, and IoT hardware prototyping.
-                    </p>
-                </div>
-                <div class="text-[10px] uppercase tracking-widest flex items-center gap-1 opacity-70">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full" style="background-color: var(--main-color);"></span>
-                    Status: Bench Testing
-                </div>
-            </div>
-
-            <!-- Category 2 -->
-            <div class="retro-card p-5 rounded-lg flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold px-2 py-0.5 rounded border" style="border-color: var(--border-color);">[MODULE 02]</span>
-                        <span class="text-xs opacity-75">v0.4</span>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 glow-text">Software & Tools</h3>
-                    <p class="text-xs opacity-80 leading-relaxed mb-4">
-                        Custom CLI tools, open-source microservices, experimental web apps, and web APIs.
-                    </p>
-                </div>
-                <div class="text-[10px] uppercase tracking-widest flex items-center gap-1 opacity-70">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full" style="background-color: var(--main-color);"></span>
-                    Status: Compiling
-                </div>
-            </div>
-
-            <!-- Category 3 -->
-            <div class="retro-card p-5 rounded-lg flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold px-2 py-0.5 rounded border" style="border-color: var(--border-color);">[MODULE 03]</span>
-                        <span class="text-xs opacity-75">v0.8</span>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 glow-text">Home Lab & Infra</h3>
-                    <p class="text-xs opacity-80 leading-relaxed mb-4">
-                        Self-hosted services, containerization, virtual networks, and Cloudflare edge architecture.
-                    </p>
-                </div>
-                <div class="text-[10px] uppercase tracking-widest flex items-center gap-1 opacity-70">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full" style="background-color: var(--main-color);"></span>
-                    Status: Active Node
-                </div>
-            </div>
-
-            <!-- Category 4 -->
-            <div class="retro-card p-5 rounded-lg flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold px-2 py-0.5 rounded border" style="border-color: var(--border-color);">[MODULE 04]</span>
-                        <span class="text-xs opacity-75">v0.0</span>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 glow-text">Cyberdeck & SDR</h3>
-                    <p class="text-xs opacity-80 leading-relaxed mb-4">
-                        Portable cyberdeck chassis builds, Software Defined Radio experiments, and telemetry logs.
-                    </p>
-                </div>
-                <div class="text-[10px] uppercase tracking-widest flex items-center gap-1 opacity-70">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full" style="background-color: var(--main-color);"></span>
-                    Status: Blueprint Phase
-                </div>
-            </div>
-
-        </section>
-
-        <!-- INTERACTIVE TERMINAL SECTION -->
-        <section class="retro-card p-4 rounded-lg flex flex-col font-mono text-xs sm:text-sm">
-            <div class="flex justify-between items-center border-b pb-2 mb-3" style="border-color: var(--border-color);">
-                <span class="font-bold flex items-center gap-2">
-                    <span class="inline-block w-2.5 h-2.5 rounded-sm" style="background-color: var(--main-color);"></span>
-                    SNELL-OS TERMINAL v1.0.4
-                </span>
-                <span class="text-[10px] opacity-60">TYPE 'help' FOR COMMANDS</span>
-            </div>
-
-            <!-- Command Quick-Action Buttons -->
-            <div class="flex flex-wrap gap-2 mb-3">
-                <button onclick="runCommand('help')" class="retro-button px-2.5 py-1 rounded text-xs">help</button>
-                <button onclick="runCommand('status')" class="retro-button px-2.5 py-1 rounded text-xs">status</button>
-                <button onclick="runCommand('projects')" class="retro-button px-2.5 py-1 rounded text-xs">projects</button>
-                <button onclick="runCommand('about')" class="retro-button px-2.5 py-1 rounded text-xs">about</button>
-                <button onclick="runCommand('clear')" class="retro-button px-2.5 py-1 rounded text-xs">clear</button>
-            </div>
-
-            <!-- Terminal Output Buffer -->
-            <div id="terminal-output" class="bg-black/50 p-3 rounded h-40 overflow-y-auto space-y-1 text-xs border" style="border-color: rgba(0,255,102,0.15);">
-                <div>SNELL-LABS Kernel Loaded. All sub-systems operational.</div>
-                <div>Type <span class="font-bold underline">help</span> or click the buttons above to query the system.</div>
-            </div>
-
-            <!-- Terminal Input Form -->
-            <form id="terminal-form" onsubmit="handleTerminalSubmit(event)" class="flex items-center gap-2 mt-3">
-                <span class="font-bold" style="color: var(--main-color);">&gt;</span>
-                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Enter command..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-mono" style="color: var(--main-color);" />
-            </form>
-        </section>
-
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="max-w-6xl mx-auto w-full mt-6 text-xs flex flex-col sm:flex-row justify-between items-center gap-3 opacity-80 border-t pt-4 relative z-10" style="border-color: var(--border-color);">
-        <div>
-            &copy; <span id="current-year">2026</span> SNELL-LABS // ALL RIGHTS RESERVED
-        </div>
-        <div class="flex items-center gap-4">
-            <div>SYS_TIME: <span id="clock" class="font-mono">00:00:00 UTC</span></div>
-            <div>BUILD: <span class="font-bold">v1.0.4-dev</span></div>
-        </div>
-    </footer>
-
-    <!-- Interactive Logic Script -->
-    <script>
-        // System Clock Logic
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toUTCString().split(' ')[4] + ' UTC';
-            document.getElementById('clock').innerText = timeString;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Dynamic System Stats Simulation
-        setInterval(() => {
-            const cpu = Math.floor(Math.random() * 18) + 8;
-            document.getElementById('cpu-load').innerText = cpu + '%';
-        }, 3000);
-
-        // Theme Switcher Logic (CRT Green vs Amber Phosphor)
-        function toggleTheme() {
-            const body = document.body;
-            const label = document.getElementById('theme-label');
-            if (body.classList.contains('theme-amber')) {
-                body.classList.remove('theme-amber');
-                label.innerText = 'CRT-GREEN';
-            } else {
-                body.classList.add('theme-amber');
-                label.innerText = 'AMBER-GOLD';
-            }
-        }
-
-        // Interactive Terminal Logic
-        const outputEl = document.getElementById('terminal-output');
-        const inputEl = document.getElementById('terminal-input');
-
-        const commands = {
-            'help': 'AVAILABLE COMMANDS:<br>&nbsp;&nbsp;- <b class="underline">status</b>: Displays infrastructure and server diagnostics<br>&nbsp;&nbsp;- <b class="underline">projects</b>: Lists active project roadmaps<br>&nbsp;&nbsp;- <b class="underline">about</b>: System operator information<br>&nbsp;&nbsp;- <b class="underline">clear</b>: Clears the terminal screen',
-            'status': 'SYS_DIAGNOSTICS:<br>&nbsp;&nbsp;Domain: snell-labs.com [ACTIVE]<br>&nbsp;&nbsp;Edge Proxy: Cloudflare CDN [OPTIMAL]<br>&nbsp;&nbsp;DNS Security: DNSSEC Enabled<br>&nbsp;&nbsp;TLS Encryption: 256-bit AES Active',
-            'projects': 'UPCOMING LAUNCHES:<br>&nbsp;&nbsp;1. Custom Microcontroller Sensors<br>&nbsp;&nbsp;2. Personal Portfolio Site v2.0<br>&nbsp;&nbsp;3. Self-Hosted Infrastructure Dashboard',
-            'about': 'OPERATOR: Jon Snell<br>LOCATION: Online / Cloudflare Edge<br>FOCUS: Software Engineering, Hardware, & Home Lab Systems',
-            'clear': 'CLEAR'
-        };
-
-        function runCommand(cmd) {
-            const cleanCmd = cmd.trim().toLowerCase();
-            
-            // Print command entered
-            const cmdLine = document.createElement('div');
-            cmdLine.innerHTML = `<span style="color: var(--main-dim);">&gt; ${cleanCmd}</span>`;
-            outputEl.appendChild(cmdLine);
-
-            if (cleanCmd === 'clear') {
-                outputEl.innerHTML = '';
-            } else if (commands[cleanCmd]) {
-                const resLine = document.createElement('div');
-                resLine.innerHTML = commands[cleanCmd];
-                outputEl.appendChild(resLine);
-            } else if (cleanCmd !== '') {
-                const errLine = document.createElement('div');
-                errLine.innerHTML = `<span style="opacity: 0.7;">Command not recognized: '${cleanCmd}'. Type 'help' for options.</span>`;
-                outputEl.appendChild(errLine);
-            }
-
-            outputEl.scrollTop = outputEl.scrollHeight;
-        }
-
-        function handleTerminalSubmit(e) {
-            e.preventDefault();
-            const value = inputEl.value;
-            if (value) {
-                runCommand(value);
-                inputEl.value = '';
-            }
-        }
-    </script>
 </body>
 </html>
