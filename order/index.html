@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Requisition // SNELL LABS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header>
+    <a href="/" class="brand">SNELL LABS <span class="brand-badge">SECURE R&D</span></a>
+    <nav>
+      <a href="/">Overview</a>
+      <a href="/inventory/">Inventory</a>
+      <a href="/order/" class="active">Requisition</a>
+      <a href="/orders/">Ledger</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 650px; margin: 0 auto;">
+    <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Operative Requisition Form</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Submit hardware allocation requests for official clearance.</p>
+
+    <form class="card" onsubmit="event.preventDefault(); alert('Requisition Submitted to Snell Labs Command!');">
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">OPERATIVE CODENAME</label>
+        <input type="text" placeholder="e.g. Iron Man / Batman" required style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">AFFILIATION</label>
+        <select style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+          <option>Avengers Initiative</option>
+          <option>Justice League International</option>
+          <option>X-Men / Krakoa Defense</option>
+          <option>Independent Operative</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">HARDWARE REQUESTED</label>
+        <select style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+          <option>Grappling Utility Module v4 ($45,000)</option>
+          <option>Vibranium Weave Shield ($1,250,000)</option>
+          <option>Sub-Orbital Thruster Pack ($850,000)</option>
+          <option>Web-Fluid Synthesizer Cartridges ($12,500)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">QUANTITY</label>
+        <input type="number" min="1" value="1" style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+      </div>
+
+      <button type="submit" style="width:100%; padding:0.85rem; background:var(--accent-color); color:#fff; border:none; border-radius:4px; font-weight:600; cursor:pointer;">
+        Submit Requisition Order
+      </button>
+    </form>
+  </main>
+
+</body>
+</html>
