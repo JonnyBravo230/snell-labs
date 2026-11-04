@@ -22,11 +22,11 @@
     <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Active Operative Requisitions</h1>
     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Real-time fulfillment ledger for custom defense contracts.</p>
 
-    <!-- Controls Bar: Filter & Sort -->
+    <!-- Controls Bar -->
     <div class="controls-bar">
       <div class="control-group">
         <label for="search-input">Search:</label>
-        <input type="text" id="search-input" placeholder="Search by name, gadget..." oninput="filterAndSortTable()">
+        <input type="text" id="search-input" placeholder="Search operative, item..." oninput="filterAndSortTable()">
       </div>
 
       <div style="display: flex; gap: 1rem;">
@@ -53,32 +53,41 @@
         <div class="control-group">
           <label for="sort-by">Sort By:</label>
           <select id="sort-by" onchange="filterAndSortTable()">
-            <option value="id-asc">Order ID (Asc)</option>
+            <option value="id-asc">Order ID</option>
             <option value="name-asc">Operative Name</option>
-            <option value="cost-desc">Total Cost (High to Low)</option>
-            <option value="cost-asc">Total Cost (Low to High)</option>
-            <option value="qty-desc">Quantity (High to Low)</option>
+            <option value="cost-desc">Cost (High to Low)</option>
+            <option value="cost-asc">Cost (Low to High)</option>
+            <option value="qty-desc">Quantity</option>
           </select>
         </div>
       </div>
     </div>
 
-    <!-- Interactive Table Container -->
+    <!-- Structured Data Table Container -->
     <div class="table-container">
       <table id="orders-table">
+        <colgroup>
+          <col class="col-id">
+          <col class="col-name">
+          <col class="col-affiliation">
+          <col class="col-gadget">
+          <col class="col-qty">
+          <col class="col-cost">
+          <col class="col-status">
+        </colgroup>
         <thead>
           <tr>
-            <th>Order ID</th>
-            <th>Operative (Alias)</th>
-            <th>Affiliation</th>
-            <th>Gadget / Hardware</th>
-            <th>Qty</th>
-            <th>Total Cost</th>
-            <th>Fulfillment</th>
+            <th class="text-left">Order ID</th>
+            <th class="text-left">Operative</th>
+            <th class="text-left">Affiliation</th>
+            <th class="text-left">Hardware Item</th>
+            <th class="text-center">Qty</th>
+            <th class="text-right">Total Cost</th>
+            <th class="text-center">Fulfillment</th>
           </tr>
         </thead>
         <tbody id="table-body">
-          <!-- Rows rendered by JavaScript -->
+          <!-- Dynamically populated rows -->
         </tbody>
       </table>
     </div>
@@ -87,11 +96,11 @@
   <script>
     const ordersData = [
       { id: "#SL-9041", rawId: 9041, name: "Batman", affiliation: "Justice League", gadget: "Grappling Utility Module v4", qty: 12, cost: 540000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9042", rawId: 9042, name: "Iron Man", affiliation: "Avengers", gadget: "Sub-Orbital Thruster Pack (Refined)", qty: 4, cost: 3400000, status: "In Transit", badgeClass: "badge-transit" },
-      { id: "#SL-9043", rawId: 9043, name: "Spider-Man", affiliation: "Independent", gadget: "Web-Fluid Cartridges (Box of 50)", qty: 10, cost: 125000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9044", rawId: 9044, name: "Captain America", affiliation: "Avengers", gadget: "Vibranium Weave Shield Restoration", qty: 1, cost: 1250000, status: "Assembly", badgeClass: "badge-pending" },
-      { id: "#SL-9045", rawId: 9045, name: "Cyborg", affiliation: "Justice League", gadget: "Micro-Fusion Battery Core", qty: 2, cost: 980000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9046", rawId: 9046, name: "Black Widow", affiliation: "Avengers", gadget: "Tactical Electro-Stun Gauntlets", qty: 2, cost: 160000, status: "In Transit", badgeClass: "badge-transit" }
+      { id: "#SL-9042", rawId: 9042, name: "Iron Man", affiliation: "Avengers", gadget: "Sub-Orbital Thruster Pack", qty: 4, cost: 3400000, status: "In Transit", badgeClass: "badge-transit" },
+      { id: "#SL-9043", rawId: 9043, name: "Spider-Man", affiliation: "Independent", gadget: "Web-Fluid Cartridges (x50)", qty: 10, cost: 125000, status: "Delivered", badgeClass: "badge-fulfilled" },
+      { id: "#SL-9044", rawId: 9044, name: "Captain America", affiliation: "Avengers", gadget: "Vibranium Shield Refit", qty: 1, cost: 1250000, status: "Assembly", badgeClass: "badge-pending" },
+      { id: "#SL-9045", rawId: 9045, name: "Cyborg", affiliation: "Justice League", gadget: "Micro-Fusion Core", qty: 2, cost: 980000, status: "Delivered", badgeClass: "badge-fulfilled" },
+      { id: "#SL-9046", rawId: 9046, name: "Black Widow", affiliation: "Avengers", gadget: "Electro-Stun Gauntlets", qty: 2, cost: 160000, status: "In Transit", badgeClass: "badge-transit" }
     ];
 
     function formatCurrency(amount) {
@@ -113,7 +122,6 @@
         return matchesSearch && matchesAffiliation && matchesStatus;
       });
 
-      // Sorting logic
       filtered.sort((a, b) => {
         if (sortBy === 'id-asc') return a.rawId - b.rawId;
         if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
@@ -127,26 +135,25 @@
       tbody.innerHTML = '';
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 2rem;">No matching requisitions found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color: var(--text-muted); padding: 2rem;">No matching requisitions found.</td></tr>`;
         return;
       }
 
       filtered.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td style="font-family:var(--font-mono);">${item.id}</td>
-          <td><strong>${item.name}</strong></td>
-          <td>${item.affiliation}</td>
-          <td>${item.gadget}</td>
-          <td>${item.qty}</td>
-          <td>${formatCurrency(item.cost)}</td>
-          <td><span class="badge ${item.badgeClass}">${item.status}</span></td>
+          <td class="text-left" style="font-family:var(--font-mono); font-weight:600; color:#60a5fa;">${item.id}</td>
+          <td class="text-left"><strong>${item.name}</strong></td>
+          <td class="text-left" style="color:var(--text-muted);">${item.affiliation}</td>
+          <td class="text-left">${item.gadget}</td>
+          <td class="text-center" style="font-family:var(--font-mono);">${item.qty}</td>
+          <td class="text-right" style="font-family:var(--font-mono); font-weight:600;">${formatCurrency(item.cost)}</td>
+          <td class="text-center"><span class="badge ${item.badgeClass}">${item.status}</span></td>
         `;
         tbody.appendChild(row);
       });
     }
 
-    // Initialize table on load
     filterAndSortTable();
   </script>
 
