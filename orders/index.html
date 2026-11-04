@@ -22,76 +22,133 @@
     <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Active Operative Requisitions</h1>
     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Real-time fulfillment ledger for custom defense contracts.</p>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Operative (Alias)</th>
-          <th>Affiliation</th>
-          <th>Gadget / Hardware</th>
-          <th>Qty</th>
-          <th>Total Cost</th>
-          <th>Fulfillment</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9041</td>
-          <td><strong>Batman</strong></td>
-          <td>Justice League</td>
-          <td>Grappling Utility Module v4</td>
-          <td>12</td>
-          <td>$540,000</td>
-          <td><span class="badge badge-fulfilled">Delivered</span></td>
-        </tr>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9042</td>
-          <td><strong>Iron Man</strong></td>
-          <td>Avengers</td>
-          <td>Sub-Orbital Thruster Pack (Refined)</td>
-          <td>4</td>
-          <td>$3,400,000</td>
-          <td><span class="badge badge-transit">In Transit</span></td>
-        </tr>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9043</td>
-          <td><strong>Spider-Man</strong></td>
-          <td>Independent</td>
-          <td>Web-Fluid Cartridges (Box of 50)</td>
-          <td>10</td>
-          <td>$125,000</td>
-          <td><span class="badge badge-fulfilled">Delivered</span></td>
-        </tr>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9044</td>
-          <td><strong>Captain America</strong></td>
-          <td>Avengers</td>
-          <td>Vibranium Weave Shield Restoration</td>
-          <td>1</td>
-          <td>$1,250,000</td>
-          <td><span class="badge badge-pending">Assembly</span></td>
-        </tr>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9045</td>
-          <td><strong>Cyborg</strong></td>
-          <td>Justice League</td>
-          <td>Micro-Fusion Battery Core</td>
-          <td>2</td>
-          <td>$980,000</td>
-          <td><span class="badge badge-fulfilled">Delivered</span></td>
-        </tr>
-        <tr>
-          <td style="font-family:var(--font-mono);">#SL-9046</td>
-          <td><strong>Black Widow</strong></td>
-          <td>Avengers</td>
-          <td>Tactical Electro-Stun Gauntlets</td>
-          <td>2</td>
-          <td>$160,000</td>
-          <td><span class="badge badge-transit">In Transit</span></td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Controls Bar: Filter & Sort -->
+    <div class="controls-bar">
+      <div class="control-group">
+        <label for="search-input">Search:</label>
+        <input type="text" id="search-input" placeholder="Search by name, gadget..." oninput="filterAndSortTable()">
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <div class="control-group">
+          <label for="filter-affiliation">Affiliation:</label>
+          <select id="filter-affiliation" onchange="filterAndSortTable()">
+            <option value="ALL">All Affiliations</option>
+            <option value="Avengers">Avengers</option>
+            <option value="Justice League">Justice League</option>
+            <option value="Independent">Independent</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="filter-status">Status:</label>
+          <select id="filter-status" onchange="filterAndSortTable()">
+            <option value="ALL">All Statuses</option>
+            <option value="Delivered">Delivered</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Assembly">Assembly</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="sort-by">Sort By:</label>
+          <select id="sort-by" onchange="filterAndSortTable()">
+            <option value="id-asc">Order ID (Asc)</option>
+            <option value="name-asc">Operative Name</option>
+            <option value="cost-desc">Total Cost (High to Low)</option>
+            <option value="cost-asc">Total Cost (Low to High)</option>
+            <option value="qty-desc">Quantity (High to Low)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Table Container -->
+    <div class="table-container">
+      <table id="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Operative (Alias)</th>
+            <th>Affiliation</th>
+            <th>Gadget / Hardware</th>
+            <th>Qty</th>
+            <th>Total Cost</th>
+            <th>Fulfillment</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Rows rendered by JavaScript -->
+        </tbody>
+      </table>
+    </div>
   </main>
+
+  <script>
+    const ordersData = [
+      { id: "#SL-9041", rawId: 9041, name: "Batman", affiliation: "Justice League", gadget: "Grappling Utility Module v4", qty: 12, cost: 540000, status: "Delivered", badgeClass: "badge-fulfilled" },
+      { id: "#SL-9042", rawId: 9042, name: "Iron Man", affiliation: "Avengers", gadget: "Sub-Orbital Thruster Pack (Refined)", qty: 4, cost: 3400000, status: "In Transit", badgeClass: "badge-transit" },
+      { id: "#SL-9043", rawId: 9043, name: "Spider-Man", affiliation: "Independent", gadget: "Web-Fluid Cartridges (Box of 50)", qty: 10, cost: 125000, status: "Delivered", badgeClass: "badge-fulfilled" },
+      { id: "#SL-9044", rawId: 9044, name: "Captain America", affiliation: "Avengers", gadget: "Vibranium Weave Shield Restoration", qty: 1, cost: 1250000, status: "Assembly", badgeClass: "badge-pending" },
+      { id: "#SL-9045", rawId: 9045, name: "Cyborg", affiliation: "Justice League", gadget: "Micro-Fusion Battery Core", qty: 2, cost: 980000, status: "Delivered", badgeClass: "badge-fulfilled" },
+      { id: "#SL-9046", rawId: 9046, name: "Black Widow", affiliation: "Avengers", gadget: "Tactical Electro-Stun Gauntlets", qty: 2, cost: 160000, status: "In Transit", badgeClass: "badge-transit" }
+    ];
+
+    function formatCurrency(amount) {
+      return '$' + amount.toLocaleString();
+    }
+
+    function filterAndSortTable() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const affiliation = document.getElementById('filter-affiliation').value;
+      const status = document.getElementById('filter-status').value;
+      const sortBy = document.getElementById('sort-by').value;
+
+      let filtered = ordersData.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(search) || 
+                              item.gadget.toLowerCase().includes(search) || 
+                              item.id.toLowerCase().includes(search);
+        const matchesAffiliation = affiliation === 'ALL' || item.affiliation === affiliation;
+        const matchesStatus = status === 'ALL' || item.status === status;
+        return matchesSearch && matchesAffiliation && matchesStatus;
+      });
+
+      // Sorting logic
+      filtered.sort((a, b) => {
+        if (sortBy === 'id-asc') return a.rawId - b.rawId;
+        if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+        if (sortBy === 'cost-desc') return b.cost - a.cost;
+        if (sortBy === 'cost-asc') return a.cost - b.cost;
+        if (sortBy === 'qty-desc') return b.qty - a.qty;
+        return 0;
+      });
+
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 2rem;">No matching requisitions found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td style="font-family:var(--font-mono);">${item.id}</td>
+          <td><strong>${item.name}</strong></td>
+          <td>${item.affiliation}</td>
+          <td>${item.gadget}</td>
+          <td>${item.qty}</td>
+          <td>${formatCurrency(item.cost)}</td>
+          <td><span class="badge ${item.badgeClass}">${item.status}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Initialize table on load
+    filterAndSortTable();
+  </script>
 
 </body>
 </html>
