@@ -18,48 +18,95 @@
     </nav>
   </header>
 
-  <main style="max-width: 650px; margin: 0 auto;">
+  <main class="narrow">
     <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Operative Requisition Form</h1>
     <p style="color: var(--text-muted); margin-bottom: 2rem;">Submit hardware allocation requests for official clearance.</p>
 
-    <form class="card" onsubmit="event.preventDefault(); alert('Requisition Submitted to Snell Labs Command!');">
-      <div style="margin-bottom: 1.25rem;">
-        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">OPERATIVE CODENAME</label>
-        <input type="text" placeholder="e.g. Iron Man / Batman" required style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+    <form class="card form-card" id="req-form">
+      <div class="field">
+        <label for="f-name">OPERATIVE CODENAME</label>
+        <input id="f-name" type="text" placeholder="e.g. Iron Man / Batman" required maxlength="60">
       </div>
 
-      <div style="margin-bottom: 1.25rem;">
-        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">AFFILIATION</label>
-        <select style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
-          <option>Avengers Initiative</option>
-          <option>Justice League International</option>
-          <option>X-Men / Krakoa Defense</option>
-          <option>Independent Operative</option>
-        </select>
+      <div class="field">
+        <label for="f-affiliation">AFFILIATION</label>
+        <select id="f-affiliation"></select>
       </div>
 
-      <div style="margin-bottom: 1.25rem;">
-        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">HARDWARE REQUESTED</label>
-        <select style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
-          <option>Grappling Utility Module v4 ($45,000)</option>
-          <option>Vibranium Weave Shield ($1,250,000)</option>
-          <option>Sub-Orbital Thruster Pack ($850,000)</option>
-          <option>Web-Fluid Synthesizer Cartridges ($12,500)</option>
-          <option>Micro-Fusion Battery Core ($490,000)</option>
-          <option>Tactical Electro-Stun Gauntlets ($80,000)</option>
-        </select>
+      <div class="field">
+        <label for="f-product">HARDWARE REQUESTED</label>
+        <select id="f-product"></select>
       </div>
 
-      <div style="margin-bottom: 1.5rem;">
-        <label style="display:block; font-size:0.85rem; font-family:var(--font-mono); margin-bottom:0.4rem;">QUANTITY</label>
-        <input type="number" min="1" value="1" style="width:100%; padding:0.75rem; background:#1f2937; border:1px solid var(--border-color); border-radius:4px; color:#fff;">
+      <div class="field">
+        <label for="f-qty">QUANTITY</label>
+        <input id="f-qty" type="number" min="1" max="999" value="1" required>
       </div>
 
-      <button type="submit" style="width:100%; padding:0.85rem; background:var(--accent-color); color:#fff; border:none; border-radius:4px; font-weight:600; cursor:pointer;">
-        Submit Requisition Order
-      </button>
+      <div class="form-total">
+        <span>ESTIMATED TOTAL</span>
+        <strong id="f-total">$0</strong>
+      </div>
+
+      <button type="submit" class="btn-primary">Submit Requisition Order</button>
     </form>
+
+    <div class="card form-confirm" id="req-confirm" hidden>
+      <span class="badge badge-submitted">Submitted</span>
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-body"></p>
+      <div class="confirm-actions">
+        <a class="btn-primary" href="/orders/">View in Ledger</a>
+        <a class="btn-secondary" href="/order/">New Requisition</a>
+      </div>
+    </div>
   </main>
+
+  <script src="/js/data.js"></script>
+  <script>
+    const form = document.getElementById('req-form');
+    const productSel = document.getElementById('f-product');
+    const affSel = document.getElementById('f-affiliation');
+    const qtyInput = document.getElementById('f-qty');
+
+    affSel.innerHTML = SL_AFFILIATIONS.map(a => `<option value="${a}">${a}</option>`).join('');
+    productSel.innerHTML = SL_PRODUCTS.map(p =>
+      `<option value="${p.id}">${slEscape(p.name)} (${slFormatCurrency(p.price)})</option>`).join('');
+
+    const preselect = new URLSearchParams(location.search).get('item');
+    if (slProduct(preselect)) productSel.value = preselect;
+
+    function updateTotal() {
+      const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+      document.getElementById('f-total').textContent = slFormatCurrency(slProduct(productSel.value).price * qty);
+    }
+    productSel.addEventListener('change', updateTotal);
+    qtyInput.addEventListener('input', updateTotal);
+    updateTotal();
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const order = {
+        id: slNextOrderId(),
+        name: document.getElementById('f-name').value.trim(),
+        affiliation: affSel.value,
+        productId: productSel.value,
+        qty: Math.max(1, parseInt(qtyInput.value, 10) || 1),
+        status: 'Submitted'
+      };
+      const list = slLoadSubmitted();
+      list.push(order);
+      const saved = slSaveSubmitted(list);
+
+      const product = slProduct(order.productId);
+      document.getElementById('confirm-title').textContent = `Requisition #SL-${order.id} received`;
+      document.getElementById('confirm-body').textContent =
+        `${order.qty} × ${product.name} for ${order.name} (${order.affiliation}), ${slFormatCurrency(product.price * order.qty)}.` +
+        (saved ? '' : ' Note: your browser blocked local storage, so this order will not appear in the ledger.');
+      form.hidden = true;
+      document.getElementById('req-confirm').hidden = false;
+    });
+  </script>
 
 </body>
 </html>

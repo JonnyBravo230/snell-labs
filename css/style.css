@@ -213,3 +213,69 @@ tr:last-child td {
 tr:hover td {
   background: rgba(37, 99, 235, 0.08);
 }
+
+/* Inventory cards */
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; }
+.card-head h3 { font-size: 1.2rem; }
+.card-desc { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem; }
+.card-foot { border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.card-clearance { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+.card-price { font-family: var(--font-mono); font-weight: 700; color: #60a5fa; font-size: 1.1rem; }
+.card-cta { margin-top: 1rem; font-family: var(--font-mono); font-size: 0.8rem; color: #60a5fa; text-decoration: none; align-self: flex-start; }
+.card-cta:hover { color: var(--text-main); }
+
+.badge-submitted { background: rgba(167, 139, 250, 0.15); color: #c4b5fd; border: 1px solid rgba(196, 181, 253, 0.3); }
+
+/* Requisition form */
+main.narrow { max-width: 650px; margin: 0 auto; }
+.form-card { display: block; }
+.form-card:hover, .form-confirm:hover { transform: none; }
+.field { margin-bottom: 1.25rem; }
+.field label { display: block; font-size: 0.85rem; font-family: var(--font-mono); margin-bottom: 0.4rem; }
+.field input, .field select {
+  width: 100%; padding: 0.75rem; background: #1f2937; border: 1px solid var(--border-color);
+  border-radius: 4px; color: #fff; font-size: 1rem;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent-color); }
+.form-total {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem; border: 1px dashed var(--border-color); border-radius: 4px;
+  font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);
+}
+.form-total strong { color: #60a5fa; font-size: 1.15rem; }
+.btn-primary, .btn-secondary {
+  display: inline-block; text-align: center; padding: 0.85rem 1.25rem; border-radius: 4px;
+  font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none; border: none;
+}
+.btn-primary { background: var(--accent-color); color: #fff; }
+.btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
+form .btn-primary { width: 100%; }
+.form-confirm { display: block; }
+.form-confirm[hidden], .form-card[hidden] { display: none; }
+.form-confirm h2 { margin: 1rem 0 0.5rem; font-size: 1.4rem; }
+.form-confirm p { color: var(--text-muted); margin-bottom: 1.5rem; }
+.confirm-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+/* Ledger extras */
+.control-filters { display: flex; gap: 1rem; flex-wrap: wrap; }
+.ledger-note { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+.ledger-note[hidden] { display: none; }
+.ledger-note button {
+  margin-left: 0.5rem; background: none; border: 1px solid var(--border-color); color: var(--text-muted);
+  padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+}
+.ledger-note button:hover { color: var(--text-main); border-color: var(--accent-color); }
+table#orders-table { min-width: 1040px; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  body { padding: 1.25rem 1rem; }
+  header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+  nav a { margin-left: 0; }
+  main h1 { font-size: 1.8rem !important; }
+  .card-grid { grid-template-columns: 1fr; }
+  .controls-bar, .control-filters { flex-direction: column; align-items: stretch; }
+  .control-group { flex-direction: column; align-items: stretch; gap: 0.3rem; }
+  .control-group select, .control-group input { width: 100%; }
+}

@@ -29,25 +29,15 @@
         <input type="text" id="search-input" placeholder="Search operative, item..." oninput="filterAndSortTable()">
       </div>
 
-      <div style="display: flex; gap: 1rem;">
+      <div class="control-filters">
         <div class="control-group">
           <label for="filter-affiliation">Affiliation:</label>
-          <select id="filter-affiliation" onchange="filterAndSortTable()">
-            <option value="ALL">All Affiliations</option>
-            <option value="Avengers">Avengers</option>
-            <option value="Justice League">Justice League</option>
-            <option value="Independent">Independent</option>
-          </select>
+          <select id="filter-affiliation" onchange="filterAndSortTable()"></select>
         </div>
 
         <div class="control-group">
           <label for="filter-status">Status:</label>
-          <select id="filter-status" onchange="filterAndSortTable()">
-            <option value="ALL">All Statuses</option>
-            <option value="Delivered">Delivered</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Assembly">Assembly</option>
-          </select>
+          <select id="filter-status" onchange="filterAndSortTable()"></select>
         </div>
 
         <div class="control-group">
@@ -91,21 +81,21 @@
         </tbody>
       </table>
     </div>
+
+  <p class="ledger-note" id="ledger-note" hidden>
+    Requisitions you submit are saved in this browser only.
+    <button type="button" id="clear-submitted">Clear my requisitions</button>
+  </p>
   </main>
 
+  <script src="/js/data.js"></script>
   <script>
-    const ordersData = [
-      { id: "#SL-9041", rawId: 9041, name: "Batman", affiliation: "Justice League", gadget: "Grappling Utility Module v4", qty: 12, cost: 540000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9042", rawId: 9042, name: "Iron Man", affiliation: "Avengers", gadget: "Sub-Orbital Thruster Pack", qty: 4, cost: 3400000, status: "In Transit", badgeClass: "badge-transit" },
-      { id: "#SL-9043", rawId: 9043, name: "Spider-Man", affiliation: "Independent", gadget: "Web-Fluid Cartridges (x50)", qty: 10, cost: 125000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9044", rawId: 9044, name: "Captain America", affiliation: "Avengers", gadget: "Vibranium Shield Refit", qty: 1, cost: 1250000, status: "Assembly", badgeClass: "badge-pending" },
-      { id: "#SL-9045", rawId: 9045, name: "Cyborg", affiliation: "Justice League", gadget: "Micro-Fusion Core", qty: 2, cost: 980000, status: "Delivered", badgeClass: "badge-fulfilled" },
-      { id: "#SL-9046", rawId: 9046, name: "Black Widow", affiliation: "Avengers", gadget: "Electro-Stun Gauntlets", qty: 2, cost: 160000, status: "In Transit", badgeClass: "badge-transit" }
-    ];
-
-    function formatCurrency(amount) {
-      return '$' + amount.toLocaleString();
-    }
+    document.getElementById('filter-affiliation').innerHTML =
+      '<option value="ALL">All Affiliations</option>' +
+      SL_AFFILIATIONS.map(a => `<option value="${a}">${a}</option>`).join('');
+    document.getElementById('filter-status').innerHTML =
+      '<option value="ALL">All Statuses</option>' +
+      Object.keys(SL_STATUSES).map(s => `<option value="${s}">${s}</option>`).join('');
 
     function filterAndSortTable() {
       const search = document.getElementById('search-input').value.toLowerCase();
@@ -113,17 +103,17 @@
       const status = document.getElementById('filter-status').value;
       const sortBy = document.getElementById('sort-by').value;
 
-      let filtered = ordersData.filter(item => {
-        const matchesSearch = item.name.toLowerCase().includes(search) || 
-                              item.gadget.toLowerCase().includes(search) || 
-                              item.id.toLowerCase().includes(search);
+      const filtered = slAllOrders().filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(search) ||
+                              item.product.toLowerCase().includes(search) ||
+                              ('#sl-' + item.id).includes(search);
         const matchesAffiliation = affiliation === 'ALL' || item.affiliation === affiliation;
         const matchesStatus = status === 'ALL' || item.status === status;
         return matchesSearch && matchesAffiliation && matchesStatus;
       });
 
       filtered.sort((a, b) => {
-        if (sortBy === 'id-asc') return a.rawId - b.rawId;
+        if (sortBy === 'id-asc') return a.id - b.id;
         if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
         if (sortBy === 'cost-desc') return b.cost - a.cost;
         if (sortBy === 'cost-asc') return a.cost - b.cost;
@@ -132,27 +122,30 @@
       });
 
       const tbody = document.getElementById('table-body');
-      tbody.innerHTML = '';
-
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color: var(--text-muted); padding: 2rem;">No matching requisitions found.</td></tr>`;
         return;
       }
 
-      filtered.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="text-left" style="font-family:var(--font-mono); font-weight:600; color:#60a5fa;">${item.id}</td>
-          <td class="text-left"><strong>${item.name}</strong></td>
-          <td class="text-left" style="color:var(--text-muted);">${item.affiliation}</td>
-          <td class="text-left">${item.gadget}</td>
+      tbody.innerHTML = filtered.map(item => `
+        <tr>
+          <td class="text-left" style="font-family:var(--font-mono); font-weight:600; color:#60a5fa;">#SL-${item.id}</td>
+          <td class="text-left"><strong>${slEscape(item.name)}</strong></td>
+          <td class="text-left" style="color:var(--text-muted);">${slEscape(item.affiliation)}</td>
+          <td class="text-left">${slEscape(item.product)}</td>
           <td class="text-center" style="font-family:var(--font-mono);">${item.qty}</td>
-          <td class="text-right" style="font-family:var(--font-mono); font-weight:600;">${formatCurrency(item.cost)}</td>
-          <td class="text-center"><span class="badge ${item.badgeClass}">${item.status}</span></td>
-        `;
-        tbody.appendChild(row);
-      });
+          <td class="text-right" style="font-family:var(--font-mono); font-weight:600;">${slFormatCurrency(item.cost)}</td>
+          <td class="text-center"><span class="badge ${SL_STATUSES[item.status] || ''}">${item.status}</span></td>
+        </tr>`).join('');
     }
+
+    const note = document.getElementById('ledger-note');
+    note.hidden = slLoadSubmitted().length === 0;
+    document.getElementById('clear-submitted').addEventListener('click', () => {
+      slSaveSubmitted([]);
+      note.hidden = true;
+      filterAndSortTable();
+    });
 
     filterAndSortTable();
   </script>
